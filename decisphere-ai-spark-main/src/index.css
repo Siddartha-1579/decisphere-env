@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 270 70% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
+
+    /* DeciSphere brand tokens */
+    --ds-cyan: 187 100% 50%;
+    --ds-blue: 217 91% 60%;
+    --ds-violet: 270 70% 55%;
+    --ds-magenta: 300 76% 60%;
+    --ds-success: 152 69% 50%;
+    --ds-warning: 38 92% 50%;
+    --ds-critical: 0 84% 60%;
+
+    --ds-gradient-primary: linear-gradient(135deg, hsl(187 100% 50%), hsl(217 91% 60%), hsl(270 70% 55%));
+    --ds-gradient-accent: linear-gradient(135deg, hsl(217 91% 60%), hsl(270 70% 55%), hsl(300 76% 60%));
+    --ds-gradient-glow: linear-gradient(135deg, hsl(187 100% 50% / 0.15), hsl(270 70% 55% / 0.15));
+
+    --ds-shadow-card: 0 1px 3px hsl(220 20% 80% / 0.3), 0 4px 12px hsl(220 20% 80% / 0.1);
+    --ds-shadow-elevated: 0 4px 20px hsl(220 20% 80% / 0.25), 0 8px 32px hsl(217 91% 60% / 0.06);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .ds-card {
+    @apply bg-card rounded-2xl border border-border;
+    box-shadow: var(--ds-shadow-card);
+  }
+  .ds-card-elevated {
+    @apply bg-card rounded-2xl border border-border;
+    box-shadow: var(--ds-shadow-elevated);
+  }
+  .ds-gradient-text {
+    background: var(--ds-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .ds-gradient-border {
+    position: relative;
+  }
+  .ds-gradient-border::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--ds-gradient-primary);
+    border-radius: 0 0 1rem 1rem;
+  }
+  .ds-glow {
+    box-shadow: 0 0 20px hsl(217 91% 60% / 0.15), 0 0 40px hsl(270 70% 55% / 0.08);
+  }
+}

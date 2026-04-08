@@ -1,0 +1,18 @@
+[project]
+name = "decision-env"
+version = "0.1.0"
+description = "AI Decision-Making RL Environment for OpenEnv Hackathon"
+authors = [{name = "Jaideep Siddartha"}]
+dependencies = [
+    "openenv-core",
+    "streamlit",
+    "pydantic",
+    "fastapi",
+    "uvicorn"
+]
+
+[tool.openenv]
+entry_point = "environment:DecisionEnv"
+
+[project.scripts]
+server = "server.app:main"

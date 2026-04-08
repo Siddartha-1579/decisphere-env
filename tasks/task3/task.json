@@ -1,0 +1,10 @@
+{
+  "name": "task_prioritization",
+  "description": "Prioritize tasks in correct order",
+  "input": {
+    "tasks": ["A", "B", "C"]
+  },
+  "expected_output": {
+    "order": ["A", "C", "B"]
+  }
+}

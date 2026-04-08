@@ -1,0 +1,108 @@
+name: DecisionEnv
+version: "1.0.0"
+description: >
+  Multi-domain AI decision-making benchmark environment for task prioritization,
+  resource allocation, and crisis management.
+
+authors:
+  - name: DecisionEnv Team
+    github: decision-env
+
+license: Apache-2.0
+hackathon: "Meta PyTorch Hackathon x Scaler School of Technology"
+
+environment:
+  class: DecisionEnv
+  module: environment
+  entry_point: "environment:DecisionEnv"
+
+  endpoints:
+    root: /
+    reset: /reset
+    step: /step/{action}
+    state: /state
+
+  action_space:
+    type: Discrete
+    n: 5
+    actions:
+      - prioritize
+      - delay
+      - allocate
+      - ignore
+      - escalate
+
+  observation_space:
+    type: Box
+    shape: [20]
+    dtype: float32
+    description: >
+      Flattened state vector with task metadata, resource levels, risk indicators,
+      budget remaining, and decision signals.
+
+tasks:
+  - id: task1
+    name: resource_allocation
+    difficulty: easy
+    description: >
+      Allocate budget efficiently across departments.
+    grader: tasks/task1/grader.py
+
+  - id: task2
+    name: risk_management
+    difficulty: medium
+    description: >
+      Estimate and manage project risk accurately.
+    grader: tasks/task2/grader.py
+
+  - id: task3
+    name: task_prioritization
+    difficulty: hard
+    description: >
+      Prioritize tasks in the correct order based on urgency and importance.
+    grader: tasks/task3/grader.py
+
+reward:
+  range: [0.0001, 0.9999]
+  description: >
+    All task rewards and scores are clamped strictly inside (0,1) to satisfy
+    validator requirements.
+
+grader:
+  type: per_task
+  score_range: [0.0001, 0.9999]
+  rule: >
+    Each task grader must return a score strictly greater than 0 and strictly
+    less than 1.
+
+baseline_agents:
+  - name: RuleBasedAgent
+    module: agent
+    class: RuleBasedAgent
+    description: Heuristic urgency × importance policy
+
+  - name: RandomAgent
+    module: agent
+    class: RandomAgent
+    description: Uniform random control baseline
+
+dependencies:
+  python: ">=3.9"
+  packages:
+    - fastapi
+    - uvicorn
+    - numpy
+    - pydantic
+    - requests
+
+deployment:
+  type: fastapi
+  docker: true
+  port: 7860
+
+submission:
+  inference_script: inference.py
+  required_env:
+    - API_BASE_URL
+    - MODEL_NAME
+    - HF_TOKEN

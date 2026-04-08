@@ -1,0 +1,13 @@
+{
+  "name": "resource_allocation",
+  "description": "Allocate budget across departments efficiently",
+  "input": {
+    "budget": 1000,
+    "departments": ["AI", "Marketing", "Infra"]
+  },
+  "expected_output": {
+    "AI": 400,
+    "Marketing": 300,
+    "Infra": 300
+  }
+}

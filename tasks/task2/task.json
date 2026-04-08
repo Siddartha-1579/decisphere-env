@@ -1,0 +1,10 @@
+{
+  "name": "risk_management",
+  "description": "Estimate project risk correctly",
+  "input": {
+    "risk_factors": [0.3, 0.5, 0.2]
+  },
+  "expected_output": {
+    "risk_score": 0.3
+  }
+}
