@@ -6,6 +6,6 @@ def grade(prediction, expected):
     try:
         # Dummy evaluation logic for validation
         score = 0.85
-        return {"score": max(0.0001, min(0.9999, float(score))), "feedback": "Validation pass."}
+        return float(max(0.0001, min(0.9999, float(score))))
     except Exception as e:
-        return {"score": 0.0001, "error": str(e)}
+        return 0.0001
