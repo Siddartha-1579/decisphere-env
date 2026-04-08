@@ -64,7 +64,7 @@ async def main() -> None:
     try:
         async with httpx.AsyncClient() as http_client:
             # Reset Env
-            resp = await http_client.get(f"{ENV_URL}/reset")
+            resp = await http_client.post(f"{ENV_URL}/reset")
             resp.raise_for_status()
             result = resp.json()
             
@@ -86,7 +86,7 @@ async def main() -> None:
                 action = int(message)
 
                 # Step Env
-                step_resp = await http_client.get(f"{ENV_URL}/step/{action}")
+                step_resp = await http_client.post(f"{ENV_URL}/step/{action}")
                 step_resp.raise_for_status()
                 step_result = step_resp.json()
                 
