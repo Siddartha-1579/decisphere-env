@@ -47,8 +47,7 @@ def root():
     return {"message": "DeciSphere backend running"}
 
 
-@app.post("/reset", response_model=ResetResponse)
-@app.get("/reset", response_model=ResetResponse)
+@app.api_route("/reset", methods=["GET", "POST"], response_model=ResetResponse)
 def reset():
     global env, reward_history, current_total_reward
 
@@ -74,8 +73,7 @@ def reset():
     return ResetResponse(observation=obs)
 
 
-@app.post("/step/{action}", response_model=StepResponse)
-@app.get("/step/{action}", response_model=StepResponse)
+@app.api_route("/step/{action}", methods=["GET", "POST"], response_model=StepResponse)
 def step(action: int):
     global current_total_reward, reward_history
 
