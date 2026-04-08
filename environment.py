@@ -7,7 +7,7 @@ import numpy as np
 import random
 from typing import Dict, List, Tuple, Any, Optional
 from dataclasses import dataclass, field
-from domain_tasks import TaskPrioritization, ResourceAllocation, ComplexDecision
+from domain_tasks import TaskPrioritization, ResourceAllocation, ComplexDecision, EmailTriage, CodeReview
 
 
 @dataclass
@@ -102,6 +102,8 @@ class DecisionEnv:
             1: TaskPrioritization(rng=self._rng),
             2: ResourceAllocation(rng=self._rng),
             3: ComplexDecision(rng=self._rng),
+            4: EmailTriage(rng=self._rng),
+            5: CodeReview(rng=self._rng),
         }
         self._current_task = self._tasks[task_id]
         self._state: Optional[EnvState] = None

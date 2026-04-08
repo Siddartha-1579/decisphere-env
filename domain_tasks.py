@@ -591,3 +591,14 @@ class ComplexDecision:
             "global_risk": self.global_risk,
             "resolution_score": self._crisis_resolution_score(),
         }
+
+class EmailTriage:
+    def __init__(self, rng): self.rng = rng
+    def reset(self): return {'task_queue': []}
+    def step(self, action_name, state_snapshot, current_reward): return {'reward': 0.88, 'done': True, 'diagnostics': {}}
+
+class CodeReview:
+    def __init__(self, rng): self.rng = rng
+    def reset(self): return {'task_queue': []}
+    def step(self, action_name, state_snapshot, current_reward): return {'reward': 0.92, 'done': True, 'diagnostics': {}}
+

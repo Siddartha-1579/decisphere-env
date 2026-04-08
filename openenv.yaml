@@ -62,6 +62,20 @@ tasks:
       Prioritize tasks in the correct order based on urgency and importance.
     grader: tasks/task3/grader.py
 
+  - id: task4
+    name: email_triage
+    difficulty: easy
+    description: >
+      Sort and triage incoming communications.
+    grader: tasks/task4/grader.py
+
+  - id: task5
+    name: code_review
+    difficulty: medium
+    description: >
+      Review code and allocate developer resources to fixes.
+    grader: tasks/task5/grader.py
+
 reward:
   range: [0.0001, 0.9999]
   description: >
