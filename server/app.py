@@ -137,3 +137,10 @@ def state():
             "escalation_count": env_state.escalation_count if env_state else 0,
         }
     )
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    main()
