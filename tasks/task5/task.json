@@ -1,0 +1,10 @@
+{
+  "name": "code_review",
+  "description": "Review code and allocate developer resources to fixes",
+  "input": {
+    "bugs": ["critical", "minor"]
+  },
+  "expected_output": {
+    "allocated": ["critical"]
+  }
+}

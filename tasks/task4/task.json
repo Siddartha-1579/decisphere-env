@@ -1,0 +1,10 @@
+{
+  "name": "email_triage",
+  "description": "Sort and triage incoming communications",
+  "input": {
+    "emails": ["A", "B", "C"]
+  },
+  "expected_output": {
+    "urgent": ["A"]
+  }
+}
