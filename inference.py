@@ -60,7 +60,7 @@ async def main() -> None:
             history: List[str] = []
             rewards: List[float] = []
             steps_taken = 0
-            score = 0.0001
+            score = 0.1
             success = False
 
             log_start(task=task_name, env="DecisionEnv", model=MODEL_NAME)
@@ -107,8 +107,8 @@ async def main() -> None:
 
                 # Calculate total continuous score
                 MAX_TOTAL_REWARD = 50.0  # typical max for 50 steps
-                score = sum(rewards) / MAX_TOTAL_REWARD if MAX_TOTAL_REWARD > 0 else 0.0001
-                score = min(max(score, 0.0001), 0.9999) # strictly inside (0, 1) to satisfy validators
+                score = sum(rewards) / MAX_TOTAL_REWARD if MAX_TOTAL_REWARD > 0 else 0.1
+                score = min(max(score, 0.1), 0.9) # strictly inside (0, 1) to satisfy validators
                 success = score >= 0.5
 
             except Exception as e:
