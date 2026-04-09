@@ -64,7 +64,7 @@ class Grader:
             quality     * w["quality"]     +
             risk        * w["risk"]
         )
-        final = round(min(0.9, max(0.1, final)), 4)
+        final = round(min(0.9999, max(0.0001, final)), 4)
 
         return GradeReport(
             task_id=task_id,
