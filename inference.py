@@ -53,63 +53,68 @@ Reply ONLY with a single digit representing your chosen action."
 async def main() -> None:
     client = AsyncOpenAI(base_url=API_BASE_URL, api_key=API_KEY)
     
-    history: List[str] = []
-    rewards: List[float] = []
-    steps_taken = 0
-    score = 0.0
-    success = False
+    task_names = ["task1", "task2", "task3", "task4", "task5"]
+    async with httpx.AsyncClient() as http_client:
+        for task_idx, task_name in enumerate(task_names):
+            task_id = task_idx + 1
+            history: List[str] = []
+            rewards: List[float] = []
+            steps_taken = 0
+            score = 0.0001
+            success = False
 
-    log_start(task="Decision_Task", env="DecisionEnv", model=MODEL_NAME)
+            log_start(task=task_name, env="DecisionEnv", model=MODEL_NAME)
 
-    try:
-        async with httpx.AsyncClient() as http_client:
-            # Reset Env
-            resp = await http_client.post(f"{ENV_URL}/reset")
-            resp.raise_for_status()
-            result = resp.json()
-            
-            obs = result.get("observation", {})
-            last_reward = 0.0
-            done = obs.get("done", False)
-
-            for step in range(1, 51):
-                if done:
-                    break
-
-                # Get Env State for LLM context
-                state_resp = await http_client.get(f"{ENV_URL}/state")
-                state_resp.raise_for_status()
-                env_state = state_resp.json().get("state", {})
-
-                # Call Model
-                message = await get_model_message(client, step, env_state)
-                action = int(message)
-
-                # Step Env
-                step_resp = await http_client.post(f"{ENV_URL}/step/{action}")
-                step_resp.raise_for_status()
-                step_result = step_resp.json()
+            try:
+                # Reset Env with task_id
+                resp = await http_client.post(f"{ENV_URL}/reset?task_id={task_id}")
+                resp.raise_for_status()
+                result = resp.json()
                 
-                obs = step_result.get("observation", {})
-                reward = step_result.get("reward", 0.0)
-                done = step_result.get("done", False)
-                
-                rewards.append(reward)
-                steps_taken = step
-                last_reward = reward
+                obs = result.get("observation", {})
+                last_reward = 0.0
+                done = obs.get("done", False)
 
-                log_step(step=step, action=message, reward=reward, done=done, error=None)
-                
-                history.append(f"Step {step}: Action {message} -> reward {reward:+.2f}")
+                for step in range(1, 51):
+                    if done:
+                        break
 
-            # Calculate total continuous score
-            MAX_TOTAL_REWARD = 50.0  # typical max for 50 steps
-            score = sum(rewards) / MAX_TOTAL_REWARD if MAX_TOTAL_REWARD > 0 else 0.0
-            score = min(max(score, 0.0), 1.0)
-            success = score >= 0.5
+                    # Get Env State for LLM context
+                    state_resp = await http_client.get(f"{ENV_URL}/state")
+                    state_resp.raise_for_status()
+                    env_state = state_resp.json().get("state", {})
 
-    finally:
-        log_end(success=success, steps=steps_taken, score=score, rewards=rewards)
+                    # Call Model
+                    message = await get_model_message(client, step, env_state)
+                    action = int(message)
+
+                    # Step Env
+                    step_resp = await http_client.post(f"{ENV_URL}/step/{action}")
+                    step_resp.raise_for_status()
+                    step_result = step_resp.json()
+                    
+                    obs = step_result.get("observation", {})
+                    reward = step_result.get("reward", 0.0)
+                    done = step_result.get("done", False)
+                    
+                    rewards.append(reward)
+                    steps_taken = step
+                    last_reward = reward
+
+                    log_step(step=step, action=message, reward=reward, done=done, error=None)
+                    
+                    history.append(f"Step {step}: Action {message} -> reward {reward:+.2f}")
+
+                # Calculate total continuous score
+                MAX_TOTAL_REWARD = 50.0  # typical max for 50 steps
+                score = sum(rewards) / MAX_TOTAL_REWARD if MAX_TOTAL_REWARD > 0 else 0.0001
+                score = min(max(score, 0.0001), 0.9999) # strictly inside (0, 1) to satisfy validators
+                success = score >= 0.5
+
+            except Exception as e:
+                print(f"[DEBUG] Error running {task_name}: {e}", flush=True)
+            finally:
+                log_end(task=task_name, success=success, steps=steps_taken, score=score, rewards=rewards)
 
 
 if __name__ == "__main__":

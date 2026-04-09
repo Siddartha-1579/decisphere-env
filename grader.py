@@ -64,7 +64,7 @@ class Grader:
             quality     * w["quality"]     +
             risk        * w["risk"]
         )
-        final = round(min(1.0, max(0.0, final)), 4)
+        final = round(min(0.9999, max(0.0001, final)), 4)
 
         return GradeReport(
             task_id=task_id,
@@ -91,9 +91,9 @@ class Grader:
     def _score_correctness(self, history: List[Dict]) -> float:
         """Average correctness across all steps."""
         if not history:
-            return 0.0
+            return 0.0001
         values = [h["task_result"].get("correctness", 0) for h in history]
-        return round(sum(values) / len(values), 4)
+        return max(0.0001, min(0.9999, round(sum(values) / len(values), 4)))
 
     def _score_efficiency(self, task_id: int, summary: Dict) -> float:
         """
@@ -103,8 +103,8 @@ class Grader:
         steps = summary.get("steps_taken", 1)
         min_s = MIN_STEPS.get(task_id, 5)
         if steps <= min_s:
-            return 1.0
-        return round(min(1.0, min_s / steps), 4)
+            return 0.9999
+        return min(0.9999, max(0.0001, round(min_s / steps, 4)))
 
     def _score_quality(self, task_id: int, history: List[Dict], summary: Dict) -> float:
         """
@@ -114,7 +114,7 @@ class Grader:
           Task 3: Crisis resolution score from domain state
         """
         if not history:
-            return 0.0
+            return 0.0001
 
         if task_id == 1:
             bad_actions = sum(
@@ -122,7 +122,7 @@ class Grader:
                 if h["action"] in ("ignore", "delay")
                 and h["task_result"].get("task_urgent", False)
             )
-            quality = max(0.0, 1.0 - (bad_actions / max(1, len(history))))
+            quality = max(0.0001, min(0.9999, 1.0 - (bad_actions / max(1, len(history)))))
 
         elif task_id == 2:
             last = history[-1]
@@ -137,7 +137,7 @@ class Grader:
         else:
             quality = 0.5
 
-        return round(float(quality), 4)
+        return min(0.9999, max(0.0001, round(float(quality), 4)))
 
     def _score_risk(self, history: List[Dict], summary: Dict) -> float:
         """
@@ -147,7 +147,7 @@ class Grader:
         final_risk = summary.get("risk_level_final", 0.5)
         missed     = summary.get("missed_deadlines", 0)
         penalty    = min(0.5, missed * 0.1)
-        score = max(0.0, 1.0 - final_risk - penalty)
+        score = max(0.0001, min(0.9999, 1.0 - final_risk - penalty))
         return round(score, 4)
 
     @staticmethod

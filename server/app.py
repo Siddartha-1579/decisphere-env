@@ -7,8 +7,9 @@ import os
 # allow importing environment.py from parent folder
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from environment import DecisionEnv
-from .models import DecisionObservation, ResetResponse, StepResponse, StateResponse
+from models import DecisionObservation, ResetResponse, StepResponse, StateResponse
 
 # -----------------------------
 # FastAPI app setup
@@ -48,9 +49,14 @@ def root():
 
 
 @app.api_route("/reset", methods=["GET", "POST"], response_model=ResetResponse)
-def reset():
+def reset(task_id: int = 1):
     global env, reward_history, current_total_reward
 
+    # Ensure valid task_id mapping (domain limits are 1 to 5 conceptually, here DecisionEnv handles them)
+    # env = DecisionEnv accepts task_id
+    if task_id < 1 or task_id > 5:
+        task_id = 1
+    env = DecisionEnv(task_id=(task_id if task_id <= 3 else 3)) # DecisionEnv expects 1, 2, 3 natively but let's just pass task_id
     env.reset()
     reward_history = []
     current_total_reward = 0
